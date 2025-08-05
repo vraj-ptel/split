@@ -1,0 +1,9 @@
+# Deployment used by `npx convex dev`
+CONVEX_DEPLOYMENT=dev:fiery-bass-464 # team: vraj, project: split-5b88a
+
+NEXT_PUBLIC_CONVEX_URL=https://fiery-bass-464.convex.cloud
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_dXNlZnVsLWxlbW1pbmctNzUuY2xlcmsuYWNjb3VudHMuZGV2JA
+CLERK_SECRET_KEY=sk_test_hxmSdApHtWbujxpaakPBOQmQf8Fwgd5VLPWRcmtdAy
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+CLERK_FRONTEND_API_URL=https://useful-lemming-75.clerk.accounts.dev

@@ -1,8 +1,7 @@
 "use client";
-
 import { useParams, useRouter } from "next/navigation";
 import { api } from "@/convex/_generated/api";
-// import { useConvexQuery } from "@/hooks/use-convex-query";
+import { useConvexQuery } from "@/hooks/use-convex-query";
 import { BarLoader } from "react-spinners";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -15,19 +14,17 @@ export default function SettlementPage() {
   const router = useRouter();
   const { type, id } = params;
 
-//   const { data, isLoading } = useConvexQuery(
-//     api.settlements.getSettlementData,
-//     {
-//       entityType: type,
-//       entityId: id,
-//     }
-//   );
-const isLoading=false;
-const data=null;
+  const { data, isLoading } = useConvexQuery(
+    api.settlements.getSettlementData,
+    {
+      entityType: type,
+      entityId: id,
+    }
+  );
 
   if (isLoading) {
     return (
-      <div className=" mx-auto ">
+      <div className="container mx-auto py-12">
         <BarLoader width={"100%"} color="#36d7b7" />
       </div>
     );

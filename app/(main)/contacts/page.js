@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-// import { api } from "@/convex/_generated/api";
-// import { useConvexQuery } from "@/hooks/use-convex-query";
+import { api } from "@/convex/_generated/api";
+import { useConvexQuery } from "@/hooks/use-convex-query";
 import { BarLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,9 +17,7 @@ export default function ContactsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-//   const { data, isLoading } = useConvexQuery(api.contacts.getAllContacts);
-const isLoading=false;
-const data=null;
+  const { data, isLoading } = useConvexQuery(api.contacts.getAllContacts);
 
   // Check for the createGroup parameter when the component mounts
   useEffect(() => {
@@ -30,7 +28,7 @@ const data=null;
       setIsCreateGroupModalOpen(true);
 
       // Remove the parameter from the URL
-      const url = new URL(window.location.href);  
+      const url = new URL(window.location.href);
       url.searchParams.delete("createGroup");
 
       // Replace the current URL without the parameter

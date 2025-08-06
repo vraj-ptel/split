@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { api } from "@/convex/_generated/api";
-// import { useConvexMutation, useConvexQuery } from "@/hooks/use-convex-query";
+import { useConvexMutation, useConvexQuery } from "@/hooks/use-convex-query";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-// import { ParticipantSelector } from "./participant-selector";
+import { ParticipantSelector } from "./participant-selector";
 import { GroupSelector } from "./group-selector";
 import { CategorySelector } from "./category-selector";
 import { SplitSelector } from "./split-selector";
@@ -25,8 +25,6 @@ import {
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { getAllCategories } from "@/lib/expense-categories";
-// import { getAllCategories } from "@/lib/expense-categories";
-
 
 // Form schema validation
 const expenseSchema = z.object({
@@ -45,64 +43,15 @@ const expenseSchema = z.object({
 });
 
 export function ExpenseForm({ type = "individual", onSuccess }) {
-  // Generate temporary participants data
-  const generateTempParticipants = (currentUser) => {
-    return [
-      {
-        id: currentUser._id,
-        name: currentUser.name,
-        email: currentUser.email,
-        imageUrl: currentUser.imageUrl,
-      },
-      {
-        id: "user_participant_1",
-        name: "Sarah Chen",
-        email: "sarah.chen@example.com",
-        imageUrl: "/avatars/sarah.jpg",
-      },
-      {
-        id: "user_participant_2",
-        name: "Marcus Johnson",
-        email: "marcus.johnson@example.com",
-        imageUrl: "/avatars/marcus.jpg",
-      }
-    ];
-  };
-
   const [participants, setParticipants] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [splits, setSplits] = useState([]);
 
-  // 🚧 TEMPORARY DATA FOR DEVELOPMENT - Replace with real data from Convex/API
-  const generateTempCurrentUser = () => {
-    return {
-      _id: "user_current_123",
-      name: "You (Current User)",
-      email: "you@example.com",
-      imageUrl: "/avatars/current-user.jpg",
-      firstName: "Current",
-      lastName: "User",
-      clerkId: "clerk_current_user_123",
-      createdAt: Date.now(),
-      updatedAt: Date.now()
-    };
-  };
-
   // Mutations and queries
-  // const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
-  const currentUser = generateTempCurrentUser();
+  const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
 
-  // const createExpense = useConvexMutation(api.expenses.createExpense);
-  const createExpense = {
-    mutate: async (data) => {
-      // Simulate API call
-      console.log("Creating expense with data:", data);
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate delay
-      return { success: true, id: "expense_" + Date.now() };
-    }
-  };
-
+  const createExpense = useConvexMutation(api.expenses.createExpense);
   const categories = getAllCategories();
 
   // Set up form with validation
@@ -130,39 +79,20 @@ export function ExpenseForm({ type = "individual", onSuccess }) {
   const amountValue = watch("amount");
   const paidByUserId = watch("paidByUserId");
 
-  // Update splits when amount changes
-  useEffect(() => {
-    if (amountValue && participants.length > 0) {
-      const amount = parseFloat(amountValue);
-      if (!isNaN(amount) && amount > 0) {
-        const equalAmount = amount / participants.length;
-        const updatedSplits = participants.map(participant => ({
-          userId: participant.id,
-          amount: equalAmount,
-          paid: participant.id === paidByUserId || participant.id === currentUser._id
-        }));
-        setSplits(updatedSplits);
-      }
-    }
-  }, [amountValue, participants, paidByUserId, currentUser._id]);
-
-  // Initialize participants with temporary data
+  // When a user is added or removed, update the participant list
   useEffect(() => {
     if (participants.length === 0 && currentUser) {
-      // Initialize with temporary participants for development
-      const tempParticipants = generateTempParticipants(currentUser);
-      setParticipants(tempParticipants);
-
-      // Initialize splits for equal distribution
-      const equalAmount = 0; // Will be calculated when amount is entered
-      const tempSplits = tempParticipants.map(participant => ({
-        userId: participant.id,
-        amount: equalAmount,
-        paid: participant.id === currentUser._id
-      }));
-      setSplits(tempSplits);
+      // Always add the current user as a participant
+      setParticipants([
+        {
+          id: currentUser._id,
+          name: currentUser.name,
+          email: currentUser.email,
+          imageUrl: currentUser.imageUrl,
+        },
+      ]);
     }
-  }, [currentUser, participants.length]);
+  }, [currentUser, participants]);
 
   // Handle form submission
   const onSubmit = async (data) => {
@@ -336,10 +266,10 @@ export function ExpenseForm({ type = "individual", onSuccess }) {
         {type === "individual" && (
           <div className="space-y-2">
             <Label>Participants</Label>
-            {/* <ParticipantSelector
+            <ParticipantSelector
               participants={participants}
               onParticipantsChange={setParticipants}
-            /> */}
+            />
             {participants.length <= 1 && (
               <p className="text-xs text-amber-600">
                 Please add at least one other participant

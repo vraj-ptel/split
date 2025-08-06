@@ -1,7 +1,7 @@
 "use client";
 
-// import { api } from "@/convex/_generated/api";
-// import { useConvexQuery } from "@/hooks/use-convex-query";
+import { api } from "@/convex/_generated/api";
+import { useConvexQuery } from "@/hooks/use-convex-query";
 import { BarLoader } from "react-spinners";
 import {
   Card,
@@ -18,28 +18,32 @@ import { BalanceSummary } from "./components/balance-summary";
 import { GroupList } from "./components/group-list";
 
 export default function Dashboard() {
-  // const { data: balances, isLoading: balancesLoading } = useConvexQuery(
-  //   api.dashboard.getUserBalances
-  // );
+  const { data: balances, isLoading: balancesLoading } = useConvexQuery(
+    api.dashboard.getUserBalances
+  );
 
-  // const { data: groups, isLoading: groupsLoading } = useConvexQuery(
-  //   api.dashboard.getUserGroups
-  // );
+  const { data: groups, isLoading: groupsLoading } = useConvexQuery(
+    api.dashboard.getUserGroups
+  );
 
-  // const { data: totalSpent, isLoading: totalSpentLoading } = useConvexQuery(
-  //   api.dashboard.getTotalSpent
-  // );
+  const { data: totalSpent, isLoading: totalSpentLoading } = useConvexQuery(
+    api.dashboard.getTotalSpent
+  );
 
-  // const { data: monthlySpending, isLoading: monthlySpendingLoading } =
-  //   useConvexQuery(api.dashboard.getMonthlySpending);
+  const { data: monthlySpending, isLoading: monthlySpendingLoading } =
+    useConvexQuery(api.dashboard.getMonthlySpending);
 
-  // const isLoading =
-  //   balancesLoading ||
-  //   groupsLoading ||
-  //   totalSpentLoading ||
-  //   monthlySpendingLoading;
-  const isLoading=false;
-  const balances={}
+  const isLoading =
+    balancesLoading ||
+    groupsLoading ||
+    totalSpentLoading ||
+    monthlySpendingLoading;
+
+  console.log("balances", balances);
+  console.log("groups", groups);
+  console.log("totalSpent", totalSpent);
+  console.log("monthlySpending", monthlySpending);
+
   return (
     <div className="container mx-auto py-6 space-y-6">
       {isLoading ? (
@@ -60,7 +64,7 @@ export default function Dashboard() {
 
           {/* Balance overview cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className={'hover:shadow-2xs transition-all'}>
+            <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Total Balance
@@ -70,27 +74,27 @@ export default function Dashboard() {
                 <div className="text-2xl font-bold">
                   {balances?.totalBalance > 0 ? (
                     <span className="text-green-600">
-                      +₹{balances?.totalBalance.toFixed(2)}
+                      +${balances?.totalBalance.toFixed(2)}
                     </span>
                   ) : balances?.totalBalance < 0 ? (
                     <span className="text-red-600">
-                      -₹{Math.abs(balances?.totalBalance).toFixed(2)}
+                      -${Math.abs(balances?.totalBalance).toFixed(2)}
                     </span>
                   ) : (
-                    <span>₹0.00</span>
+                    <span>$0.00</span>
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
                   {balances?.totalBalance > 0
                     ? "You are owed money"
                     : balances?.totalBalance < 0
-                      ? "You owe money"
-                      : "All settled up!"}
+                    ? "You owe money"
+                    : "All settled up!"}
                 </p>
               </CardContent>
             </Card>
 
-            <Card className={`hover:shadow-2xs transition-all`}>
+            <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   You are owed
@@ -98,17 +102,15 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-green-600">
-                  {/* ₹{balances?.youAreOwed.toFixed(2)} */}
-                  ₹0.00
+                  ${balances?.youAreOwed.toFixed(2)}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {/* From {balances?.oweDetails?.youAreOwedBy?.length || 0} people */}
-                  From 0 people
+                  From {balances?.oweDetails?.youAreOwedBy?.length || 0} people
                 </p>
               </CardContent>
             </Card>
 
-            <Card className={`hover:shadow-2xs transition-all`}>
+            <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   You owe
@@ -118,7 +120,7 @@ export default function Dashboard() {
                 {balances?.oweDetails?.youOwe?.length > 0 ? (
                   <>
                     <div className="text-2xl font-bold text-red-600">
-                      ₹{balances?.youOwe.toFixed(2)}
+                      ${balances?.youOwe.toFixed(2)}
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
                       To {balances?.oweDetails?.youOwe?.length || 0} people
@@ -126,7 +128,7 @@ export default function Dashboard() {
                   </>
                 ) : (
                   <>
-                    <div className="text-2xl font-bold">₹0.00</div>
+                    <div className="text-2xl font-bold">$0.00</div>
                     <p className="text-xs text-muted-foreground mt-1">
                       You don't owe anyone
                     </p>
@@ -138,18 +140,16 @@ export default function Dashboard() {
 
           {/* Main dashboard content */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left column - Sticky ExpenseSummary */}
-            <div className="lg:col-span-2">
-              <div className="sticky top-6 space-y-6">
-                {/* Expense summary */}
-                <ExpenseSummary
-                  // monthlySpending={monthlySpending}
-                  // totalSpent={totalSpent}
-                />
-              </div>
+            {/* Left column */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Expense summary */}
+              <ExpenseSummary
+                monthlySpending={monthlySpending}
+                totalSpent={totalSpent}
+              />
             </div>
 
-            {/* Right column - Scrollable content */}
+            {/* Right column */}
             <div className="space-y-6">
               {/* Balance details */}
               <Card>
@@ -165,12 +165,12 @@ export default function Dashboard() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <BalanceSummary  />
+                  <BalanceSummary balances={balances} />
                 </CardContent>
               </Card>
 
               {/* Groups */}
-              <Card className={`hover:shadow-2xs transition-all`}>
+              <Card>
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <CardTitle>Your Groups</CardTitle>
@@ -183,9 +183,7 @@ export default function Dashboard() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  {/* <GroupList groups={groups} /> */}
-                  <GroupList  />
-
+                  <GroupList groups={groups} />
                 </CardContent>
                 <CardFooter>
                   <Button variant="outline" asChild className="w-full">

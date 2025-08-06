@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { api } from "@/convex/_generated/api";
-// import { useConvexMutation, useConvexQuery } from "@/hooks/use-convex-query";
+import { useConvexMutation, useConvexQuery } from "@/hooks/use-convex-query";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -27,10 +27,8 @@ const settlementSchema = z.object({
 });
 
 export default function SettlementForm({ entityType, entityData, onSuccess }) {
-  // const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
-  // const createSettlement = useConvexMutation(api.settlements.createSettlement);
-  const currentUser = null;
-  const createSettlement = null;
+  const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
+  const createSettlement = useConvexMutation(api.settlements.createSettlement);
 
   // Set up form with validation
   const {

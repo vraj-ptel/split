@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { api } from "@/convex/_generated/api";
-// import { useConvexMutation, useConvexQuery } from "@/hooks/use-convex-query";
+import { useConvexMutation, useConvexQuery } from "@/hooks/use-convex-query";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -45,19 +45,12 @@ export function CreateGroupModal({ isOpen, onClose, onSuccess }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [commandOpen, setCommandOpen] = useState(false);
 
-  // temprary disable all the variables which are using use convex api 
-  // const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
-  // const createGroup = useConvexMutation(api.contacts.createGroup);
-  // const { data: searchResults, isLoading: isSearching } = useConvexQuery(
-  //   api.users.searchUsers,
-  //   { query: searchQuery }
-  // );
-  const currentUser=null;
-  const createGroup=null;
-  const searchResults=null;
-  const isLoading=false;
-  const isSearching=false;
-
+  const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
+  const createGroup = useConvexMutation(api.contacts.createGroup);
+  const { data: searchResults, isLoading: isSearching } = useConvexQuery(
+    api.users.searchUser,
+    { query: searchQuery }
+  );
 
   const {
     register,
@@ -73,6 +66,7 @@ export function CreateGroupModal({ isOpen, onClose, onSuccess }) {
   });
 
   const addMember = (user) => {
+    
     if (!selectedMembers.some((m) => m.id === user.id)) {
       setSelectedMembers([...selectedMembers, user]);
     }

@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-// import { api } from "@/convex/_generated/api";
-// import { useConvexQuery } from "@/hooks/use-convex-query";
+import { api } from "@/convex/_generated/api";
+import { useConvexQuery } from "@/hooks/use-convex-query";
 import { BarLoader } from "react-spinners";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -20,12 +20,11 @@ export default function PersonExpensesPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("expenses");
 
-//   const { data, isLoading } = useConvexQuery(
-//     api.expenses.getExpensesBetweenUsers,
-//     { userId: params.id }
-//   );
-const isLoading=false;
-const data=null;
+  const { data, isLoading } = useConvexQuery(
+    api.expenses.getExpensesBetweenUsers,
+    { userId: params.id }
+  );
+
 
   if (isLoading) {
     return (

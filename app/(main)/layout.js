@@ -1,8 +1,12 @@
+"use client"
+import { Authenticated } from 'convex/react'
 import React from 'react'
 
 const layout = ({children}) => {
   return (
-    <div className="container mx-auto  px-4">{children}</div>
+    <Authenticated>
+      <div className="container mx-auto  px-4">{children}</div>
+    </Authenticated>
   )
 }
 

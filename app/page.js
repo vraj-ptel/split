@@ -97,7 +97,7 @@ export default function LandingPage() {
           }}></div>
         </div>
 
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
+        <div id="features" className="container mx-auto px-4 md:px-6 relative">
           <div className="text-center mb-16">
             <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200 mb-4">
               <Sparkles className="h-4 w-4 mr-2" />
@@ -236,8 +236,10 @@ export default function LandingPage() {
           </p>
           <Button asChild size="lg" className="bg-green-800 hover:opacity-90">
             <Link href="/dashboard">
-              Get Started
+              
+                Get Started
               <ArrowRight className="ml-2 h-4 w-4" />
+            
             </Link>
           </Button>
         </div>

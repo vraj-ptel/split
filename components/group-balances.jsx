@@ -5,17 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowUpCircle, ArrowDownCircle } from "lucide-react";
 
-/**
- * Expected `balances` shape (one object per member):
- * {
- *   id:           string;           // user id
- *   name:         string;
- *   imageUrl?:    string;
- *   totalBalance: number;           // + ve ⇒ they are owed, – ve ⇒ they owe
- *   owes:   { to: string;   amount: number }[];  // this member → others
- *   owedBy: { from: string; amount: number }[];  // others → this member
- * }
- */
+
 export function GroupBalances({ balances }) {
   const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
 
@@ -27,6 +17,7 @@ export function GroupBalances({ balances }) {
       </div>
     );
   }
+  
 
   /* ───── helpers ───────────────────────────────────────────────────────── */
   const me = balances.find((b) => b.id === currentUser._id);

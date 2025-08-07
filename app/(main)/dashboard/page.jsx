@@ -64,50 +64,6 @@ export default function Dashboard() {
 
           {/* Balance overview cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            
-
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  You are owed
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-600">
-                  ${balances?.youAreOwed.toFixed(2)}
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  From {balances?.oweDetails?.youAreOwedBy?.length || 0} people
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  You owe
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {balances?.oweDetails?.youOwe?.length > 0 ? (
-                  <>
-                    <div className="text-2xl font-bold text-red-600">
-                      ${balances?.youOwe.toFixed(2)}
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      To {balances?.oweDetails?.youOwe?.length || 0} people
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <div className="text-2xl font-bold">$0.00</div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      You don't owe anyone
-                    </p>
-                  </>
-                )}
-              </CardContent>
-            </Card>
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -137,12 +93,55 @@ export default function Dashboard() {
                 </p>
               </CardContent>
             </Card>
+
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  You are owed
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-green-600">
+                  ${balances?.youAreOwed.toFixed(2)}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  From {balances?.oweDetails?.youAreOwedBy?.length || 0} people
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  You owe
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {balances?.oweDetails?.youOwe?.length > 0 ? (
+                  <>
+                    <div className="text-2xl font-bold text-red-600">
+                      {localStorage.getItem('currency')||"₹"}{balances?.youOwe.toFixed(2)}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      To {balances?.oweDetails?.youOwe?.length || 0} people
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div className="text-2xl font-bold">{localStorage.getItem('currency')||"₹"} 0.00</div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      You don't owe anyone
+                    </p>
+                  </>
+                )}
+              </CardContent>
+            </Card>
           </div>
 
           {/* Main dashboard content */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left column */}
-            <div className="lg:col-span-2 sticky top-0 left-0  space-y-6">
+            <div className="lg:col-span-2 space-y-6">
               {/* Expense summary */}
               <ExpenseSummary
                 monthlySpending={monthlySpending}

@@ -1,7 +1,7 @@
 "use client";
 
-// import { useConvexQuery, useConvexMutation } from "@/hooks/use-convex-query";
-// import { api } from "@/convex/_generated/api";
+import { useConvexQuery, useConvexMutation } from "@/hooks/use-convex-query";
+import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -19,10 +19,9 @@ export function ExpenseList({
   otherPersonId = null,
   userLookupMap = {},
 }) {
-  // const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
-  // const deleteExpense = useConvexMutation(api.expenses.deleteExpense);
-  const currentUser=null;
-  const deleteExpense=null;
+  const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
+  const deleteExpense = useConvexMutation(api.expenses.deleteExpense);
+ 
 
   if (!expenses || !expenses.length) {
     return (
@@ -50,6 +49,7 @@ export function ExpenseList({
 
   // Check if the user can delete an expense (creator or payer)
   const canDeleteExpense = (expense) => {
+   
     if (!currentUser) return false;
     return (
       expense.createdBy === currentUser._id ||

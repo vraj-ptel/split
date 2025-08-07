@@ -146,8 +146,10 @@ export const getGroupExpenses = query({
     /* ----------  net the pair‑wise ledger ---------- */
     ids.forEach((a) => {
       ids.forEach((b) => {
+      
         if (a >= b) return; // visit each unordered pair once
         const diff = ledger[a][b] - ledger[b][a];
+        
         if (diff > 0) {
           ledger[a][b] = diff;
           ledger[b][a] = 0;

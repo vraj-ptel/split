@@ -64,35 +64,7 @@ export default function Dashboard() {
 
           {/* Balance overview cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Total Balance
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {balances?.totalBalance > 0 ? (
-                    <span className="text-green-600">
-                      +${balances?.totalBalance.toFixed(2)}
-                    </span>
-                  ) : balances?.totalBalance < 0 ? (
-                    <span className="text-red-600">
-                      -${Math.abs(balances?.totalBalance).toFixed(2)}
-                    </span>
-                  ) : (
-                    <span>$0.00</span>
-                  )}
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {balances?.totalBalance > 0
-                    ? "You are owed money"
-                    : balances?.totalBalance < 0
-                    ? "You owe money"
-                    : "All settled up!"}
-                </p>
-              </CardContent>
-            </Card>
+            
 
             <Card>
               <CardHeader className="pb-2">
@@ -136,12 +108,41 @@ export default function Dashboard() {
                 )}
               </CardContent>
             </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Total Balance
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {balances?.totalBalance > 0 ? (
+                    <span className="text-green-600">
+                      +${balances?.totalBalance.toFixed(2)}
+                    </span>
+                  ) : balances?.totalBalance < 0 ? (
+                    <span className="text-red-600">
+                      -${Math.abs(balances?.totalBalance).toFixed(2)}
+                    </span>
+                  ) : (
+                    <span>$0.00</span>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {balances?.totalBalance > 0
+                    ? "You are owed money"
+                    : balances?.totalBalance < 0
+                    ? "You owe money"
+                    : "All settled up!"}
+                </p>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Main dashboard content */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left column */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 sticky top-0 left-0  space-y-6">
               {/* Expense summary */}
               <ExpenseSummary
                 monthlySpending={monthlySpending}

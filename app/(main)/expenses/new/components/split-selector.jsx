@@ -6,6 +6,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { useCurrency } from "@/components/currencyContext";
+import { useConvexQuery } from "@/hooks/use-convex-query";
+import { api } from "@/convex/_generated/api";
+import { convertCurrency } from "@/lib/convertCurrency";
+import { currency_symbol_map } from "@/lib/currency-category";
 
 export function SplitSelector({
   type,
@@ -19,6 +23,12 @@ export function SplitSelector({
   const [totalPercentage, setTotalPercentage] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const {currency}=useCurrency();
+   const {data:currentUser}=useConvexQuery(api.users.getCurrentUser);
+    
+    const convert=(val)=>{
+      
+      return convertCurrency(val,'USD',currentUser?.currency);
+    }
 
   // Calculate splits when inputs change
   useEffect(() => {
@@ -193,7 +203,7 @@ export function SplitSelector({
 
           {type === "equal" && (
             <div className="text-right text-sm">
-              {currency}{split.amount.toFixed(2)} ({split.percentage.toFixed(1)}%)
+              {currency_symbol_map[currentUser?.currency]}{split.amount.toFixed(2)} ({split.percentage.toFixed(1)}%)
             </div>
           )}
 
@@ -224,7 +234,7 @@ export function SplitSelector({
                   className="w-16 h-8"
                 />
                 <span className="text-sm text-muted-foreground">%</span>
-                <span className="text-sm ml-1">{currency}{split.amount.toFixed(2)}</span>
+                <span className="text-sm ml-1">{currency_symbol_map[currentUser?.currency]}{split.amount.toFixed(2)}</span>
               </div>
             </div>
           )}
@@ -261,7 +271,7 @@ export function SplitSelector({
           <span
             className={`font-medium ${!isAmountValid ? "text-amber-600" : ""}`}
           >
-            {currency}{totalAmount.toFixed(2)}
+            {currency_symbol_map[currentUser?.currency]}{totalAmount.toFixed(2)}
           </span>
           {type !== "equal" && (
             <span
@@ -282,7 +292,7 @@ export function SplitSelector({
 
       {type === "exact" && !isAmountValid && (
         <div className="text-sm text-amber-600 mt-2">
-          The sum of all splits ({currency}{totalAmount.toFixed(2)}) should equal the
+          The sum of all splits ({currency_symbol_map[currentUser?.currency]}{totalAmount.toFixed(2)}) should equal the
           total amount (${amount.toFixed(2)}).
         </div>
       )}

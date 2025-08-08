@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
-// import { useConvexQuery } from "@/hooks/use-convex-query";
-// import { api } from "@/convex/_generated/api";
+
+import { api } from "@/convex/_generated/api";
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeftRight } from "lucide-react";
 import Link from "next/link";
 import { useCurrency } from "./currencyContext";
+import { convertCurrency } from "@/lib/convertCurrency";
+import { currency_symbol_map } from "@/lib/currency-category";
+import { useConvexQuery } from "@/hooks/use-convex-query";
 
 export function SettlementList({
   settlements,
@@ -16,9 +19,13 @@ export function SettlementList({
   userLookupMap,
 }) {
   const {currency}=useCurrency();
-  // const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
-  // console.log("settlements", settlements);
-  const currentUser=null;
+  const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
+  console.log("settlements", settlements);
+  // const currentUser=null;
+   const convert=(val)=>{
+      
+      return convertCurrency (val,'USD',currentUser?.currency);
+    }
 
   if (!settlements || !settlements.length) {
     return (
@@ -89,7 +96,7 @@ export function SettlementList({
 
                 <div className="text-right">
                   <div className="font-medium">
-                    {currency}{settlement.amount.toFixed(2)}
+                    {currency_symbol_map[currentUser?.currency]}{convert(settlement.amount.toFixed(2))}
                   </div>
                   {isGroupSettlement ? (
                     <Badge variant="outline" className="mt-1">

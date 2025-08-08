@@ -25,6 +25,7 @@ import {
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { getAllCategories } from "@/lib/expense-categories";
+import { convertCurrency } from "@/lib/convertCurrency";
 
 // Form schema validation
 const expenseSchema = z.object({
@@ -97,12 +98,12 @@ export function ExpenseForm({ type = "individual", onSuccess }) {
   // Handle form submission
   const onSubmit = async (data) => {
     try {
-      const amount = parseFloat(data.amount);
+      const amount = convertCurrency(parseFloat(data.amount),currentUser?.currency,'USD');
 
       // Prepare splits in the format expected by the API
       const formattedSplits = splits.map((split) => ({
         userId: split.userId,
-        amount: split.amount,
+        amount: convertCurrency(split.amount,currentUser?.currency,'USD'),
         paid: split.userId === data.paidByUserId,
       }));
 
@@ -183,6 +184,7 @@ export function ExpenseForm({ type = "individual", onSuccess }) {
             {errors.amount && (
               <p className="text-sm text-red-500">{errors.amount.message}</p>
             )}
+            {/* <p className="text-sm text-muted-foreground">*add amount in us dollar </p> */}
           </div>
         </div>
 

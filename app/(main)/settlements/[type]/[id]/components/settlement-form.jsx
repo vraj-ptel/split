@@ -14,6 +14,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { useCurrency } from "@/components/currencyContext";
+import { convertCurrency } from "@/lib/convertCurrency";
+import { currency_symbol_map } from "@/lib/currency-category";
 
 // Form schema validation
 const settlementSchema = z.object({
@@ -31,6 +33,10 @@ export default function SettlementForm({ entityType, entityData, onSuccess }) {
   const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
   const createSettlement = useConvexMutation(api.settlements.createSettlement);
    const {currency}=useCurrency();
+    const convert=(val)=>{
+       
+       return convertCurrency(val,'USD',currentUser?.currency);
+     }
   // Set up form with validation
   const {
     register,
@@ -124,10 +130,13 @@ export default function SettlementForm({ entityType, entityData, onSuccess }) {
 
   // Handle form submission
   const onSubmit = async (data) => {
+    
+    const updatedAmount=convertCurrency(parseInt(data.amount),currentUser?.currency,'USD');
+    const updatedData={...data,amount:updatedAmount.toString()};
     if (entityType === "user") {
-      await handleUserSettlement(data);
+      await handleUserSettlement(updatedData);
     } else if (entityType === "group" && selectedGroupMemberId) {
-      await handleGroupSettlement(data, selectedGroupMemberId);
+      await handleGroupSettlement(updatedData, selectedGroupMemberId);
     }
   };
 
@@ -154,7 +163,7 @@ export default function SettlementForm({ entityType, entityData, onSuccess }) {
                 <span className="font-medium">{otherUser.name}</span> owes you
               </p>
               <span className="text-xl font-bold text-green-600">
-                {currency}{netBalance.toFixed(2)}
+                {currency_symbol_map[currentUser?.currency]}{convert(netBalance)}
               </span>
             </div>
           ) : (
@@ -163,7 +172,7 @@ export default function SettlementForm({ entityType, entityData, onSuccess }) {
                 You owe <span className="font-medium">{otherUser.name}</span>
               </p>
               <span className="text-xl font-bold text-red-600">
-                {currency}{Math.abs(netBalance).toFixed(2)}
+                {currency_symbol_map[currentUser?.currency]}{convert(Math.abs(netBalance))}
               </span>
             </div>
           )}
@@ -217,7 +226,7 @@ export default function SettlementForm({ entityType, entityData, onSuccess }) {
         <div className="space-y-2">
           <Label htmlFor="amount">Amount</Label>
           <div className="relative">
-            <span className="absolute left-3 top-2.5">{currency}</span>
+            <span className="absolute left-3 top-2.5">{currency_symbol_map[currentUser?.currency]}</span>
             <Input
               id="amount"
               placeholder="0.00"
@@ -293,9 +302,9 @@ export default function SettlementForm({ entityType, entityData, onSuccess }) {
                       }`}
                     >
                       {isOwing
-                        ? `They owe you ${currency}${Math.abs(member.netBalance).toFixed(2)}`
+                        ? `They owe you ${currency_symbol_map[currentUser?.currency]}${convert(Math.abs(member.netBalance))}`
                         : isOwed
-                          ? `You owe ${currency}${Math.abs(member.netBalance).toFixed(2)}`
+                          ? `You owe ${currency_symbol_map[currentUser?.currency]}${convert(Math.abs(member.netBalance))}`
                           : "Settled up"}
                     </div>
                   </div>
@@ -386,7 +395,7 @@ export default function SettlementForm({ entityType, entityData, onSuccess }) {
             <div className="space-y-2">
               <Label htmlFor="amount">Amount</Label>
               <div className="relative">
-                <span className="absolute left-3 top-2.5">{currency}</span>
+                <span className="absolute left-3 top-2.5">{currency_symbol_map[currentUser?.currency]}</span>
                 <Input
                   id="amount"
                   placeholder="0.00"

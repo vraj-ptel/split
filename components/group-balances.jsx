@@ -5,11 +5,15 @@ import { api } from "@/convex/_generated/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowUpCircle, ArrowDownCircle } from "lucide-react";
 import { useCurrency } from "./currencyContext";
-
+import { convertCurrency } from "@/lib/convertCurrency";
+import { currency_symbol_map } from "@/lib/currency-category";
 
 export function GroupBalances({ balances }) {
-  const {currency}=useCurrency();
+  const { currency } = useCurrency();
   const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
+  const convert = (val) => {
+    return convertCurrency(val, "USD", currentUser?.currency);
+  };
 
   /* ───── guards ────────────────────────────────────────────────────────── */
   if (!balances?.length || !currentUser) {
@@ -19,7 +23,6 @@ export function GroupBalances({ balances }) {
       </div>
     );
   }
-  
 
   /* ───── helpers ───────────────────────────────────────────────────────── */
   const me = balances.find((b) => b.id === currentUser._id);
@@ -64,10 +67,10 @@ export function GroupBalances({ balances }) {
           }`}
         >
           {me.totalBalance > 0
-            ? `+${currency}${me.totalBalance.toFixed(2)}`
+            ? `+${currency_symbol_map[currentUser?.currency]}${convert(me.totalBalance.toFixed(2))}`
             : me.totalBalance < 0
-              ? `-${currency}${Math.abs(me.totalBalance).toFixed(2)}`
-              : `${currency}0.00`}
+              ? `-${currency_symbol_map[currentUser?.currency]}${convert(Math.abs(me.totalBalance).toFixed(2))}`
+              : `${currency_symbol_map[currentUser?.currency]}0.00`}
         </p>
         <p className="text-sm text-muted-foreground mt-1">
           {me.totalBalance > 0
@@ -107,7 +110,8 @@ export function GroupBalances({ balances }) {
                       <span className="text-sm">{member.name}</span>
                     </div>
                     <span className="font-medium text-green-600">
-                      {currency}{member.amount.toFixed(2)}
+                      {currency_symbol_map[currentUser?.currency]}
+                      {convert(member.amount.toFixed(2))}
                     </span>
                   </div>
                 ))}
@@ -138,7 +142,9 @@ export function GroupBalances({ balances }) {
                       <span className="text-sm">{member.name}</span>
                     </div>
                     <span className="font-medium text-red-600">
-                      {currency}{member.amount.toFixed(2)}
+                      {currency_symbol_map[currentUser?.currency]}
+                      {convert(member.amount.toFixed(2))}
+                     
                     </span>
                   </div>
                 ))}

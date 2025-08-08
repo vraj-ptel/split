@@ -33,10 +33,32 @@ export const store = mutation({
       tokenIdentifier: identity.tokenIdentifier,
       email: identity.email,
       imageUrl: identity.pictureUrl,
+      currency:"USD",
     });
   },
 });
-
+export const updateCurrency = mutation({
+  args: {
+    currency: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_token", (q) =>
+        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      )
+      .unique();
+    if (!user) {
+      throw new Error("User not found");
+    }
+    await ctx.db.patch(user._id, { currency: args.currency });
+    return user._id;
+  },
+});
 // Get current user
 export const getCurrentUser = query({
   handler: async (ctx) => {

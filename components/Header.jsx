@@ -28,12 +28,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { currency_category } from "@/lib/currency-category";
+import { currency_category, currency_map, currency_symbol_map } from "@/lib/currency-category";
 import { useCurrency } from "./currencyContext";
+import { useConvexMutation, useConvexQuery } from "@/hooks/use-convex-query";
+import { api } from "@/convex/_generated/api";
 const availableTimezones = Intl.supportedValuesOf("timeZone");
 
 const Header = () => {
   const { isLoading } = useStoreUser();
+  const {data:currentUser}=useConvexQuery(api.users.getCurrentUser);
+  const {mutate}=useConvexMutation(api.users.updateCurrency);
   // const [selectedCurrency, setSelectedCurrency] = React.useState(localStorage.getItem("currency") || "$");
   const { currency, currencyChange,timezone,changeTimezone } = useCurrency();
 
@@ -41,8 +45,13 @@ const Header = () => {
     changeTimezone(timeZone);
   };
 
+
   const currencyTypeChange = (val) => {
     currencyChange(val);
+    if(currentUser){
+      mutate({currency:currency_map[val]});
+
+    }
   };
   const path = usePathname();
   return (
@@ -96,7 +105,7 @@ const Header = () => {
             <Authenticated>
               {path == "/dashboard" && (
                 <>
-                <Select value={currency} onValueChange={currencyTypeChange}>
+                <Select value={currency_symbol_map[currentUser?.currency]} onValueChange={currencyTypeChange}>
                   <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Select a currency you prefer" />
                   </SelectTrigger>

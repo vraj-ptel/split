@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useCurrency } from "./currencyContext";
 import { toZonedTime } from 'date-fns-tz';
+import { convertCurrency } from "@/lib/convertCurrency";
+import { currency_symbol_map } from "@/lib/currency-category";
 
 
 // import { utcToZonedTime } from 'date-fns-tz';
@@ -28,6 +30,11 @@ export function ExpenseList({
   const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
   const deleteExpense = useConvexMutation(api.expenses.deleteExpense);
   const {currency,timezone}=useCurrency()
+ 
+    const convert=(val)=>{
+      
+      return convertCurrency(val,'USD',currentUser?.currency);
+    }
 
   if (!expenses || !expenses.length) {
     return (
@@ -124,7 +131,7 @@ export function ExpenseList({
                 <div className="flex items-center gap-2">
                   <div className="text-right">
                     <div className="font-medium">
-                      {currency}{expense.amount.toFixed(2)}
+                      {currency_symbol_map[currentUser?.currency]}{convert(expense.amount.toFixed(2))}
                     </div>
                     {isGroupExpense ? (
                       <Badge variant="outline" className="mt-1">
@@ -184,8 +191,8 @@ export function ExpenseList({
                           </AvatarFallback>
                         </Avatar>
                         <span>
-                          {isCurrentUser ? "You" : splitUser.name}: $
-                          {split.amount.toFixed(2)}
+                          {isCurrentUser ? "You" : splitUser.name}: {currency_symbol_map[currentUser?.currency]}
+                          {convert(split.amount.toFixed(2))}
                         </span>
                       </Badge>
                     );

@@ -14,11 +14,18 @@ import { ExpenseList } from "@/components/expense-list";
 import { SettlementList } from "@/components/settlement-list";
 import { GroupBalances } from "@/components/group-balances";
 import { GroupMembers } from "@/components/group-members";
+import { convertCurrency } from "@/lib/convertCurrency";
 
 export default function GroupExpensesPage() {
   const params = useParams();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("expenses");
+  const {data:currentUser}=useConvexQuery(api.users.getCurrentUser);
+    
+    const convert=(val)=>{
+      
+      return convertCurrency(val,'USD',currentUser?.currency);
+    }
 
   const { data, isLoading } = useConvexQuery(api.groups.getGroupExpenses, {
     groupId: params.id,

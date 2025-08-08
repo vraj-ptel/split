@@ -5,6 +5,7 @@ import { useUser } from "@clerk/nextjs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
+import { useCurrency } from "@/components/currencyContext";
 
 export function SplitSelector({
   type,
@@ -17,6 +18,7 @@ export function SplitSelector({
   const [splits, setSplits] = useState([]);
   const [totalPercentage, setTotalPercentage] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
+  const {currency}=useCurrency();
 
   // Calculate splits when inputs change
   useEffect(() => {
@@ -191,7 +193,7 @@ export function SplitSelector({
 
           {type === "equal" && (
             <div className="text-right text-sm">
-              ${split.amount.toFixed(2)} ({split.percentage.toFixed(1)}%)
+              {currency}{split.amount.toFixed(2)} ({split.percentage.toFixed(1)}%)
             </div>
           )}
 
@@ -222,7 +224,7 @@ export function SplitSelector({
                   className="w-16 h-8"
                 />
                 <span className="text-sm text-muted-foreground">%</span>
-                <span className="text-sm ml-1">${split.amount.toFixed(2)}</span>
+                <span className="text-sm ml-1">{currency}{split.amount.toFixed(2)}</span>
               </div>
             </div>
           )}
@@ -231,7 +233,7 @@ export function SplitSelector({
             <div className="flex items-center gap-2 flex-1">
               <div className="flex-1"></div>
               <div className="flex gap-1 items-center">
-                <span className="text-sm text-muted-foreground">$</span>
+                <span className="text-sm text-muted-foreground">{currency}</span>
                 <Input
                   type="number"
                   min="0"
@@ -259,7 +261,7 @@ export function SplitSelector({
           <span
             className={`font-medium ${!isAmountValid ? "text-amber-600" : ""}`}
           >
-            ${totalAmount.toFixed(2)}
+            {currency}{totalAmount.toFixed(2)}
           </span>
           {type !== "equal" && (
             <span
@@ -280,7 +282,7 @@ export function SplitSelector({
 
       {type === "exact" && !isAmountValid && (
         <div className="text-sm text-amber-600 mt-2">
-          The sum of all splits (${totalAmount.toFixed(2)}) should equal the
+          The sum of all splits ({currency}{totalAmount.toFixed(2)}) should equal the
           total amount (${amount.toFixed(2)}).
         </div>
       )}

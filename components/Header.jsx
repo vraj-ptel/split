@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   SignInButton,
   SignOutButton,
@@ -30,15 +30,20 @@ import {
 } from "@/components/ui/select";
 import { currency_category } from "@/lib/currency-category";
 import { useCurrency } from "./currencyContext";
+const availableTimezones = Intl.supportedValuesOf("timeZone");
+
 const Header = () => {
   const { isLoading } = useStoreUser();
-  const [selectedCurrency, setSelectedCurrency] = React.useState("INR");
-  const {currency,currencyChange}=useCurrency();
-  const currencyTypeChange=(val)=>{
-    
-    setSelectedCurrency(val);
-    localStorage.setItem("currency",val);
-  }
+  // const [selectedCurrency, setSelectedCurrency] = React.useState(localStorage.getItem("currency") || "$");
+  const { currency, currencyChange,timezone,changeTimezone } = useCurrency();
+
+  const handleTimezoneChange = (timeZone) => {
+    changeTimezone(timeZone);
+  };
+
+  const currencyTypeChange = (val) => {
+    currencyChange(val);
+  };
   const path = usePathname();
   return (
     <div>
@@ -89,24 +94,48 @@ const Header = () => {
               </div>
             </Unauthenticated>
             <Authenticated>
-              <Link href={"/dashboard"}>
-                <Button className={"cursor-pointer"} variant={"outine"}>
-                  <LayoutDashboard />
-                  Dashboard
-                </Button>
-              </Link>
-              <UserButton />
-              <Select value={selectedCurrency} onValueChange={currencyChange}>
+              {path == "/dashboard" && (
+                <>
+                <Select value={currency} onValueChange={currencyTypeChange}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select a currency you prefer" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {currency_category.map((cur, index) => {
+                      return (
+                        <SelectItem value={cur.symbol} key={index}>
+                          {cur.symbol} {cur.name}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+                 <Select value={timezone} onValueChange={handleTimezoneChange}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a currency you prefer" />
                 </SelectTrigger>
                 <SelectContent>
-                 
-                  {currency_category.map((cur,index)=>{
-                    return  <SelectItem value={cur.symbol} key={index}>{cur.symbol}{" "}{cur.name}</SelectItem>
+                  {availableTimezones.map((timeZone, index) => {
+                    return (
+                      <SelectItem value={timeZone} key={timeZone}>
+                        {timeZone} 
+                      </SelectItem>
+                    );
                   })}
                 </SelectContent>
               </Select>
+                </>
+              )}
+             
+              {path !== "/dashboard" && (
+                <Link href={"/dashboard"}>
+                  <Button className={"cursor-pointer"} variant={"outine"}>
+                    <LayoutDashboard />
+                    Dashboard
+                  </Button>
+                </Link>
+              )}
+              <UserButton />
             </Authenticated>
           </div>
         </div>

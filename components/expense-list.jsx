@@ -11,6 +11,12 @@ import { getCategoryIcon } from "@/lib/expense-categories";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useCurrency } from "./currencyContext";
+import { toZonedTime } from 'date-fns-tz';
+
+
+// import { utcToZonedTime } from 'date-fns-tz';
+
 
 export function ExpenseList({
   expenses,
@@ -21,7 +27,7 @@ export function ExpenseList({
 }) {
   const { data: currentUser } = useConvexQuery(api.users.getCurrentUser);
   const deleteExpense = useConvexMutation(api.expenses.deleteExpense);
- 
+  const {currency,timezone}=useCurrency()
 
   if (!expenses || !expenses.length) {
     return (
@@ -82,6 +88,7 @@ export function ExpenseList({
         const category = getCategoryById(expense.category);
         const CategoryIcon = getCategoryIcon(category.id);
         const showDeleteOption = canDeleteExpense(expense);
+        
 
         return (
           <Card
@@ -100,7 +107,7 @@ export function ExpenseList({
                     <h3 className="font-medium">{expense.description}</h3>
                     <div className="flex items-center text-sm text-muted-foreground gap-2">
                       <span>
-                        {format(new Date(expense.date), "MMM d, yyyy")}
+                        {format(toZonedTime(new Date(expense.date),timezone), "MMM d, yyyy")}
                       </span>
                       {showOtherPerson && (
                         <>
@@ -117,7 +124,7 @@ export function ExpenseList({
                 <div className="flex items-center gap-2">
                   <div className="text-right">
                     <div className="font-medium">
-                      ${expense.amount.toFixed(2)}
+                      {currency}{expense.amount.toFixed(2)}
                     </div>
                     {isGroupExpense ? (
                       <Badge variant="outline" className="mt-1">

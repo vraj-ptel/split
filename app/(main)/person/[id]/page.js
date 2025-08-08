@@ -13,9 +13,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircle, ArrowLeftRight, ArrowLeft } from "lucide-react";
 import { ExpenseList } from "@/components/expense-list";
 import { SettlementList } from "@/components/settlement-list";
+import { useCurrency } from "@/components/currencyContext";
 
 export default function PersonExpensesPage() {
   const params = useParams();
+ const {currency}=useCurrency()
 
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("expenses");
@@ -107,7 +109,7 @@ export default function PersonExpensesPage() {
             <div
               className={`text-2xl font-bold ${balance > 0 ? "text-green-600" : balance < 0 ? "text-red-600" : ""}`}
             >
-              ${Math.abs(balance).toFixed(2)}
+              {currency}{Math.abs(balance).toFixed(2)}
             </div>
           </div>
         </CardContent>

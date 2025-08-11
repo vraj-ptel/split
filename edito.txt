@@ -1,0 +1,43 @@
+client .env :-
+AUTH_SECRET="MU6u+YyWm6xd7+6xHNDIKuPJ0Bk+cbfmVbFhv0pbJ/Q=" # Added by `npx auth`. Read more: https://cli.authjs.dev
+AUTH_GOOGLE_ID="1023985903523-dv5332c1peou1cik40gpn8r5e6gjtjgj.apps.googleusercontent.com"
+AUTH_GOOGLE_SECRET="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"
+NEXT_PUBLIC_API_URL="http://localhost:5000"
+
+
+
+api-gateway:-
+PORT=5000
+MONGO_PASS=f65nLIdH74L7XqbZ
+MONGO_URI=mongodb+srv://vrajpatel121512:f65nLIdH74L7XqbZ@cluster0.bgmcykq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+AUTH_GOOGLE_ID="1023985903523-dv5332c1peou1cik40gpn8r5e6gjtjgj.apps.googleusercontent.com"
+DESIGN_SERVICE_URI=http://localhost:5001
+SUBSCRIPTION_SERVICE_URI=http://localhost:5002
+UPLOAD_SERVICE_URI=http://localhost:5003
+
+design-service :-
+PORT=5001
+MONGO_PASS=f65nLIdH74L7XqbZ
+MONGO_URI=mongodb+srv://vrajpatel121512:f65nLIdH74L7XqbZ@cluster0.bgmcykq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+
+subscription-service:-
+PORT=5002
+MONGO_PASS=f65nLIdH74L7XqbZ
+MONGO_URI=mongodb+srv://vrajpatel121512:f65nLIdH74L7XqbZ@cluster0.bgmcykq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+SECRET=AWJyQtu02lDArV2wdgTGRyg6Z1v1XFhQZ9XhzQ97jJsDzPuAmiZPV5zPWU779Gnkb_3G77OTySCf7LGE
+CLIENT_ID=AWJyQtu02lDArV2wdgTGRyg6Z1v1XFhQZ9XhzQ97jJsDzPuAmiZPV5zPWU779Gnkb_3G77OTySCf7LGE
+# CLIENT_ID="AS2tMW_yY1jY2PAba6G9jQBtWYXYdyk4cnQjt4H_14Q1wV7p7b2zUUR14d0p933-guWIuNg5G-ASyJfI"
+# SECRET="EDAZI-VL2_johwsMz8zlNw77IJYW8CHtyT0dS07ZKIAy4Yq5KT3Jm4xYV1BNPCVgMF__0jmRzdaQV7Rz"
+RAZOR_KEY=rzp_test_obfj1MpQ8s8S1v
+RAZOR_SEC=gqsWdT3wYemRBCaPxMbRC5Uq
+
+upload-service:-
+PORT=5003
+CLOUDINARY_CLOUD_NAME="dqnalklng"
+CLOUDINARY_API_KEY="527691496441618"
+CLOUDINARY_API_SECRET="GKQV4Le2i-XBNAwAbGDGQnk4GXs"
+STABILITY_API_KEY=sk-aqV2H36Fxy0wDpRRblAiMBtuuMD2utU2pGyn7ddnQGQikUb2
+GEMINI_API_KEY=AIzaSyC9FajfDUPVz2OKY57vUO0GAfcBjzXCqsM
+MONGO_PASS=f65nLIdH74L7XqbZ
+MONGO_URI=mongodb+srv://vrajpatel121512:f65nLIdH74L7XqbZ@cluster0.bgmcykq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
